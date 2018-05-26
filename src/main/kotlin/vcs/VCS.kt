@@ -1,5 +1,9 @@
 package vcs
 
+import java.io.File
+
 interface VCS {
-    fun createReport(): VCSReport
+    fun detect(path: File): Boolean
+
+    fun createReport(path: File): VcsReport
 }

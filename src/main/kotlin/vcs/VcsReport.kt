@@ -1,13 +1,13 @@
-package loc
+package vcs
 
 import report.Report
 import report.Reportable
 
-class LocReport: Reportable {
+class VcsReport: Reportable {
     private var map = mutableMapOf<String, Long>()
 
-    fun addFile(filename: String, loc: Long) {
-        map[filename] = loc
+    fun addFile(filename: String, changes: Long) {
+        map[filename] = changes
     }
 
     fun size(): Int {
@@ -15,8 +15,8 @@ class LocReport: Reportable {
     }
 
     override fun report(report: Report) {
-        for ((file, loc) in this.map) {
-            report.addLoc(file, loc)
+        for ((file, changes) in this.map) {
+            report.addChangeFreqs(file, changes)
         }
     }
 }

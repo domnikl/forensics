@@ -1,13 +1,20 @@
 package vcs
 
-class Factory {
-    private val supportedSystems = listOf(GitAdapter::class)
+import shell.ShellCommand
+import java.io.File
 
-    fun build(path: String): VCS {
-        for (system in supportedSystems) {
-            TODO("check if system to be chosen")
+class Factory {
+    fun build(path: File): VCS {
+        val availableSystems = listOf(
+                Git(ShellCommand(File("git")))
+        )
+
+        for (system in availableSystems) {
+            if (system.detect(path)) {
+                return system
+            }
         }
 
-        return GitAdapter(path)
+        throw UnknownVcsException("Could not detect used VCS in ${path.path})")
     }
 }

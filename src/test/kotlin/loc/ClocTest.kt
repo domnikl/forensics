@@ -1,9 +1,9 @@
+package loc
+
 import com.nhaarman.mockito_kotlin.*
-import loc.Cloc
 import shell.ShellCommand
 import java.io.BufferedReader
 import java.io.File
-import java.io.Reader
 import java.io.StringReader
 import kotlin.test.Test
 import kotlin.test.assertEquals

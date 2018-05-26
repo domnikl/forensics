@@ -1,16 +1,25 @@
-import com.domnikl.forensics.Report
+import report.Report
+import java.io.BufferedWriter
 import java.io.File
-import vcs.Factory as VcsFactory
+import java.io.OutputStreamWriter
 import loc.Factory as LocFactory
+import vcs.Factory as VcsFactory
 
-class Analyzer (private val path: File) {
+class Analyzer(private val path: File) {
     fun analyze(): Report {
+        val report = Report()
         val locReport = LocFactory().build().createReport(path)
+        val vcsReport = VcsFactory().build(path).createReport(path)
 
-        return Report()
+        locReport.report(report)
+        vcsReport.report(report)
+
+        return report
     }
 }
 
 fun main(args: Array<String>) {
-    Analyzer(File("").absoluteFile).analyze()
+    val report = Analyzer(File("").absoluteFile).analyze()
+
+    report.write(BufferedWriter(OutputStreamWriter(System.out)))
 }

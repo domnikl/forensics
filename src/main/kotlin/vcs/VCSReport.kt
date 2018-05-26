@@ -1,4 +1,0 @@
-package vcs
-
-class VCSReport {
-}

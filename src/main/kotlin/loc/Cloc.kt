@@ -19,8 +19,7 @@ class Cloc(private val shellCommand: ShellCommand) : LocAdapter {
         )
     }
 
-    private fun parse(reader: BufferedReader): LocReport
-    {
+    private fun parse(reader: BufferedReader): LocReport {
         val expectedHeader = "language,filename,blank,comment,code"
         var header = reader.readLine()
         var line: String?
@@ -38,7 +37,9 @@ class Cloc(private val shellCommand: ShellCommand) : LocAdapter {
 
         while (line != null) {
             val tokens = line.split(",")
-            report.addFile(tokens[CLOC_FILENAME_IDX], tokens[CLOC_LOC_IDX].toLong())
+            val filename = tokens[CLOC_FILENAME_IDX].removePrefix("./")
+
+            report.addFile(filename, tokens[CLOC_LOC_IDX].toLong())
 
             line = reader.readLine()
         }
