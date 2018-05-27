@@ -1,4 +1,4 @@
-package report
+package com.domnikl.forensics.report
 
 import java.io.BufferedWriter
 import kotlin.math.roundToLong

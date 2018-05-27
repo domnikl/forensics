@@ -1,4 +1,4 @@
-package shell
+package com.domnikl.forensics.shell
 
 import java.io.BufferedReader
 import java.io.File

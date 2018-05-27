@@ -1,7 +1,7 @@
-package loc
+package com.domnikl.forensics.loc
 
-import report.Report
-import report.Reportable
+import com.domnikl.forensics.report.Report
+import com.domnikl.forensics.report.Reportable
 
 class LocReport: Reportable {
     private var mapLoc = mutableMapOf<String, Pair<Long, String>>()

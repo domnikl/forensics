@@ -1,7 +1,7 @@
-package loc
+package com.domnikl.forensics.loc
 
 import com.nhaarman.mockito_kotlin.*
-import shell.ShellCommand
+import com.domnikl.forensics.shell.ShellCommand
 import java.io.BufferedReader
 import java.io.File
 import java.io.StringReader

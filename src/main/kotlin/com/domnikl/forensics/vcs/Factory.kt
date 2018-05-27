@@ -1,6 +1,6 @@
-package vcs
+package com.domnikl.forensics.vcs
 
-import shell.ShellCommand
+import com.domnikl.forensics.shell.ShellCommand
 import java.io.File
 
 class Factory {

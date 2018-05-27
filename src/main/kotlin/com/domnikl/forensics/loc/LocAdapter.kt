@@ -1,4 +1,4 @@
-package loc
+package com.domnikl.forensics.loc
 
 import java.io.File
 

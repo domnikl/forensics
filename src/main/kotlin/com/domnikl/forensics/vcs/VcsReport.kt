@@ -1,7 +1,7 @@
-package vcs
+package com.domnikl.forensics.vcs
 
-import report.Report
-import report.Reportable
+import com.domnikl.forensics.report.Report
+import com.domnikl.forensics.report.Reportable
 
 class VcsReport: Reportable {
     private var listOfChanges = mutableListOf<Change>()

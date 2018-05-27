@@ -1,6 +1,6 @@
-package loc
+package com.domnikl.forensics.loc
 
-import shell.ShellCommand
+import com.domnikl.forensics.shell.ShellCommand
 import java.io.File
 
 class Factory {

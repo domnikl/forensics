@@ -1,4 +1,4 @@
-package vcs
+package com.domnikl.forensics.vcs
 
 import org.junit.Test
 

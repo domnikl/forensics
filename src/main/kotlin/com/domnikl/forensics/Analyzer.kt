@@ -1,11 +1,11 @@
 package com.domnikl.forensics
 
-import report.Report
+import com.domnikl.forensics.report.Report
 import java.io.BufferedWriter
 import java.io.File
 import java.io.OutputStreamWriter
-import loc.Factory as LocFactory
-import vcs.Factory as VcsFactory
+import com.domnikl.forensics.loc.Factory as LocFactory
+import com.domnikl.forensics.vcs.Factory as VcsFactory
 
 class Analyzer(private val path: File) {
     fun analyze(): Report {
