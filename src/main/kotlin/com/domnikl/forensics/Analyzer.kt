@@ -1,5 +1,6 @@
 package com.domnikl.forensics
 
+import com.domnikl.forensics.complexity.Scanner
 import com.domnikl.forensics.report.Report
 import com.domnikl.forensics.shell.ShellCommand
 import com.domnikl.forensics.vcs.Git
@@ -13,6 +14,8 @@ class Analyzer(private val path: File) {
     fun analyze(): Report {
         val cloc = ShellCommand(File("cloc"))
         val vcsConfig = listOf(Git(ShellCommand(File("git"))))
+
+        val complexity = Scanner().scan(path)
 
         val report = Report()
         val vcsReport = VcsFactory(vcsConfig).build(path).createReport(path)
