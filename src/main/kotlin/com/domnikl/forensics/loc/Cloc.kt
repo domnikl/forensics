@@ -51,6 +51,8 @@ class Cloc(private val shellCommand: ShellCommand) : LocAdapter {
             line = reader.readLine()
         }
 
+        reader.close()
+
         return report
     }
 }

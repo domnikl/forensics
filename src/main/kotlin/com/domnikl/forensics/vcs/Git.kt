@@ -51,6 +51,8 @@ class Git(private val shellCommand: ShellCommand) : VCS {
             line = reader.readLine()
         }
 
+        reader.close()
+
         return report
     }
 
