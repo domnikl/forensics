@@ -29,7 +29,7 @@ class Cloc(private val shellCommand: ShellCommand) : LocAdapter {
             header = reader.readLine()
         }
 
-        if (header == null || header.substring(0, expectedHeader.length) != expectedHeader) {
+        if (header == null || !header.startsWith(expectedHeader)) {
             throw IllegalArgumentException("cloc header expected to begin with $expectedHeader, but was $header")
         }
 
