@@ -29,7 +29,7 @@ internal class ClocTest {
 
     @Test
     fun returnsCanParseCsvOutput() {
-        val reader = BufferedReader(StringReader("\nlanguage,filename,blank,comment,code\nJava,src/main/Foo.java,0,0,42\n"))
+        val reader = BufferedReader(StringReader("\nlanguage,filename,blank,comment,code\nJava,src/com.domnikl.forensics.main/Foo.java,0,0,42\n"))
         val mock = createShellCommand(reader)
 
         val report = Cloc(mock).createReport(File("."))

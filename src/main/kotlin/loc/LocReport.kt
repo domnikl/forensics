@@ -4,19 +4,20 @@ import report.Report
 import report.Reportable
 
 class LocReport: Reportable {
-    private var map = mutableMapOf<String, Long>()
+    private var mapLoc = mutableMapOf<String, Pair<Long, String>>()
 
-    fun addFile(filename: String, loc: Long) {
-        map[filename] = loc
+    fun addFile(filename: String, loc: Long, language: String) {
+        mapLoc[filename] = Pair(loc, language)
     }
 
     fun size(): Int {
-        return map.size
+        return mapLoc.size
     }
 
     override fun report(report: Report) {
-        for ((file, loc) in this.map) {
-            report.addLoc(file, loc)
+        for ((file, item) in this.mapLoc) {
+            report.addLoc(file, item.first)
+            report.addLanguage(file, item.second)
         }
     }
 }

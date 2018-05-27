@@ -4,6 +4,7 @@ import shell.ShellCommand
 import java.io.BufferedReader
 import java.io.File
 
+const val CLOC_LANGUAGE_IDX = 0
 const val CLOC_FILENAME_IDX = 1
 const val CLOC_LOC_IDX = 4
 
@@ -39,7 +40,11 @@ class Cloc(private val shellCommand: ShellCommand) : LocAdapter {
             val tokens = line.split(",")
             val filename = tokens[CLOC_FILENAME_IDX].removePrefix("./")
 
-            report.addFile(filename, tokens[CLOC_LOC_IDX].toLong())
+            report.addFile(
+                    filename,
+                    loc = tokens[CLOC_LOC_IDX].toLong(),
+                    language = tokens[CLOC_LANGUAGE_IDX]
+                    )
 
             line = reader.readLine()
         }
