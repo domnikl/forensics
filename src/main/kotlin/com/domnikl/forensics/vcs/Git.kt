@@ -3,19 +3,24 @@ package com.domnikl.forensics.vcs
 import com.domnikl.forensics.shell.ShellCommand
 import java.io.BufferedReader
 import java.io.File
-
-const val GIT_HEADER_AUTHOR_IDX = 3
-const val GIT_DELETED_IDX = 0
-const val GIT_ADDED_IDX = 1
-const val GIT_FILENAME_IDX = 2
+import java.io.IOException
 
 class Git(private val shellCommand: ShellCommand) : VCS {
+    companion object {
+        const val GIT_HEADER_AUTHOR_IDX = 3
+        const val GIT_DELETED_IDX = 0
+        const val GIT_ADDED_IDX = 1
+        const val GIT_FILENAME_IDX = 2
+    }
+
     override fun detect(path: File): Boolean {
-        // TODO: check git version!!
+        try {
+            shellCommand.execute(listOf("log", "-1"), path)
+        } catch (e: IOException) {
+            return false
+        }
 
-        val f = File(path, ".git")
-
-        return f.isDirectory && f.canRead()
+        return true
     }
 
     override fun createReport(path: File): VcsReport {

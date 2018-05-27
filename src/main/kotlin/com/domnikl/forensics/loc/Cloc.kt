@@ -4,11 +4,13 @@ import com.domnikl.forensics.shell.ShellCommand
 import java.io.BufferedReader
 import java.io.File
 
-const val CLOC_LANGUAGE_IDX = 0
-const val CLOC_FILENAME_IDX = 1
-const val CLOC_LOC_IDX = 4
-
 class Cloc(private val shellCommand: ShellCommand) : LocAdapter {
+    companion object {
+        const val CLOC_LANGUAGE_IDX = 0
+        const val CLOC_FILENAME_IDX = 1
+        const val CLOC_LOC_IDX = 4
+    }
+
     override fun createReport(path: File): LocReport {
         return parse(execute(path))
     }

@@ -1,15 +1,10 @@
 package com.domnikl.forensics.vcs
 
-import com.domnikl.forensics.shell.ShellCommand
 import java.io.File
 
-class Factory {
+class Factory(private val config: List<VCS>) {
     fun build(path: File): VCS {
-        val availableSystems = listOf(
-                Git(ShellCommand(File("git")))
-        )
-
-        for (system in availableSystems) {
+        for (system in config) {
             if (system.detect(path)) {
                 return system
             }
