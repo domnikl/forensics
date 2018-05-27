@@ -4,7 +4,7 @@ import java.io.BufferedReader
 import java.io.File
 import java.util.concurrent.TimeUnit
 
-open class ShellCommand(private val executable: File) {
+open class ShellCommand(val executable: File) {
     open fun execute(command: List<String>, workingDirectory: File): BufferedReader {
         val proc = ProcessBuilder(listOf(executable.path) + command)
                 .directory(workingDirectory)
