@@ -1,3 +1,5 @@
+package com.domnikl.forensics
+
 import report.Report
 import java.io.BufferedWriter
 import java.io.File
