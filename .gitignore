@@ -1,2 +1,6 @@
 # compiled assets
 /target/
+
+# IntelliJ
+/.idea/
+forensics.iml
