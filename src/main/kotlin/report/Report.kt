@@ -5,6 +5,7 @@ import kotlin.math.roundToLong
 
 class Report {
     private var map = mutableMapOf<String, Item>()
+    private var authors = mapOf<String, Pair<Long, Double>>()
 
     fun addLoc(file: String, loc: Long) {
         ensureItemWasInitialized(file)
@@ -19,6 +20,10 @@ class Report {
     fun addChangeFreqs(file: String, changes: Long) {
         ensureItemWasInitialized(file)
         map[file]!!.changes = changes
+    }
+
+    fun addAuthors(authors: Map<String, Pair<Long, Double>>) {
+        this.authors = authors
     }
 
     private fun ensureItemWasInitialized(file: String) {
