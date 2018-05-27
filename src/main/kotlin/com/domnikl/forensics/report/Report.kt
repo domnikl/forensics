@@ -3,16 +3,16 @@ package com.domnikl.forensics.report
 import java.io.BufferedWriter
 import kotlin.math.roundToLong
 
-class Report {
+open class Report {
     private var map = mutableMapOf<String, Item>()
     private var authors = mapOf<String, Pair<Long, Double>>()
 
-    fun addLoc(file: String, loc: Long) {
+    open fun addLoc(file: String, loc: Long) {
         ensureItemWasInitialized(file)
         map[file]!!.loc = loc
     }
 
-    fun addLanguage(file: String, language: String) {
+    open fun addLanguage(file: String, language: String) {
         ensureItemWasInitialized(file)
         map[file]!!.language = language
     }

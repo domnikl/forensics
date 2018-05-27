@@ -20,9 +20,9 @@ internal class ClocTest {
     @Test
     fun returnsEmptyReportWhenNoLineInCsvReport() {
         val reader = BufferedReader(StringReader("\nlanguage,filename,blank,comment,code\n"))
-        val mock = createShellCommand(reader)
+        val shellCommandMock = createShellCommand(reader)
 
-        val report = Cloc(mock).createReport(File("."))
+        val report = Cloc(shellCommandMock).createReport(File("."))
 
         assertEquals(0, report.size())
     }
@@ -30,9 +30,9 @@ internal class ClocTest {
     @Test
     fun returnsCanParseCsvOutput() {
         val reader = BufferedReader(StringReader("\nlanguage,filename,blank,comment,code\nJava,src/com.domnikl.forensics.main/Foo.java,0,0,42\n"))
-        val mock = createShellCommand(reader)
+        val shellCommandMock = createShellCommand(reader)
 
-        val report = Cloc(mock).createReport(File("."))
+        val report = Cloc(shellCommandMock).createReport(File("."))
 
         assertEquals(1, report.size())
     }
