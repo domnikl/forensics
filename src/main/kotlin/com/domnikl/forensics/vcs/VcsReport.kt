@@ -12,6 +12,10 @@ class VcsReport: Reportable {
         totalChanges += changes
     }
 
+    fun size(): Int {
+        return listOfChanges.count()
+    }
+
     override fun report(report: Report) {
         val changesByFiles = listOfChanges
                 .groupingBy { it.filename }

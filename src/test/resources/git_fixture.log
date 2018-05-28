@@ -1,0 +1,9 @@
+--42092c7--2018-05-27--Dominik Liebler
+--586f144--2018-05-27--Dominik Liebler
+-	-	src/main/kotlin/com/domnikl/forensics/loc/Cloc.kt
+79	1	src/main/kotlin/com/domnikl/forensics/vcs/Git.kt
+
+--a6c3196--2018-05-27--Kinimod Relbeil
+18	0	src/main/kotlin/com/domnikl/forensics/Analyzer.kt
+1	1	src/main/kotlin/com/domnikl/forensics/complexity/Scanner.kt
+

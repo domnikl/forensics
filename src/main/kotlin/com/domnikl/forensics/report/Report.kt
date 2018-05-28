@@ -17,12 +17,12 @@ open class Report {
         map[file]!!.language = language
     }
 
-    fun addChangeFreqs(file: String, changes: Long) {
+    open fun addChangeFreqs(file: String, changes: Long) {
         ensureItemWasInitialized(file)
         map[file]!!.changes = changes
     }
 
-    fun addAuthors(authors: Map<String, Pair<Long, Double>>) {
+    open fun addAuthors(authors: Map<String, Pair<Long, Double>>) {
         this.authors = authors
     }
 

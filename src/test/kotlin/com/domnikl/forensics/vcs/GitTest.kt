@@ -1,16 +1,17 @@
 package com.domnikl.forensics.vcs
 
+import com.domnikl.forensics.report.Report
 import com.domnikl.forensics.shell.ShellCommand
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import junit.framework.TestCase.assertEquals
 import org.junit.Test
-import java.io.BufferedReader
-import java.io.File
-import java.io.IOException
-import java.io.StringReader
+import java.io.*
 
 internal class GitTest {
+
     @Test
     fun detectReturnsTrueWhenShellCommandDoesNotThrowAnIOException() {
         val path = File("").absoluteFile
@@ -27,5 +28,24 @@ internal class GitTest {
         whenever(mockGit.execute(any(), any())).thenThrow(IOException("fatal: not a git repository (or any of the parent directories): .git"))
 
         assert(!Git(mockGit).detect(path))
+    }
+
+    @Test
+    fun canParseGitLogOutput() {
+        val reportMock = mock<Report>()
+
+        val reader = BufferedReader(InputStreamReader(javaClass.getResourceAsStream("/git_fixture.log")))
+        val mockGit = mock<ShellCommand>()
+        whenever(mockGit.execute(any(), any())).thenReturn(reader)
+
+        val report = Git(mockGit).createReport(File(""))
+        report.report(reportMock)
+
+        assertEquals(3, report.size())
+
+        verify(reportMock).addAuthors(mapOf("Dominik Liebler" to Pair(80L, 80.0), "Kinimod Relbeil" to Pair(20L, 20.0)))
+        verify(reportMock).addChangeFreqs("src/main/kotlin/com/domnikl/forensics/vcs/Git.kt", 80)
+        verify(reportMock).addChangeFreqs("src/main/kotlin/com/domnikl/forensics/Analyzer.kt", 18)
+        verify(reportMock).addChangeFreqs("src/main/kotlin/com/domnikl/forensics/complexity/Scanner.kt", 2)
     }
 }
