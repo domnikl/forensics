@@ -8,28 +8,19 @@ open class Report {
     private var authors = mapOf<String, Pair<Long, Double>>()
 
     open fun addLoc(file: String, loc: Long) {
-        ensureItemWasInitialized(file)
-        map[file]!!.loc = loc
+        ensureItemWasInitialized(file).loc = loc
     }
 
     open fun addLanguage(file: String, language: String) {
-        ensureItemWasInitialized(file)
-        map[file]!!.language = language
+        ensureItemWasInitialized(file).language = language
     }
 
     open fun addChangeFreqs(file: String, changes: Long) {
-        ensureItemWasInitialized(file)
-        map[file]!!.changes = changes
+        ensureItemWasInitialized(file).changes = changes
     }
 
     open fun addAuthors(authors: Map<String, Pair<Long, Double>>) {
         this.authors = authors
-    }
-
-    private fun ensureItemWasInitialized(file: String) {
-        if (!map.containsKey(file)) {
-            map[file] = Item(filename = file)
-        }
     }
 
     fun write(writer: BufferedWriter) {
@@ -65,5 +56,17 @@ open class Report {
         }
     }
 
-    data class Item(val filename: String, var loc: Long = 0, var changes: Long = 0, var language: String = "")
+    private fun ensureItemWasInitialized(file: String): Item {
+        if (!map.containsKey(file)) {
+            map[file] = Item(filename = file)
+        }
+
+        return map[file]!!
+    }
+
+    data class Item(
+            val filename: String,
+            var loc: Long = 0,
+            var changes: Long = 0,
+            var language: String = "")
 }
