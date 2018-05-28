@@ -9,6 +9,7 @@ import com.nhaarman.mockito_kotlin.whenever
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 import java.io.*
+import java.time.LocalDateTime
 
 internal class GitTest {
 
@@ -38,7 +39,7 @@ internal class GitTest {
         val mockGit = mock<ShellCommand>()
         whenever(mockGit.execute(any(), any())).thenReturn(reader)
 
-        val report = Git(mockGit).createReport(File(""))
+        val report = Git(mockGit).createReport(File(""), LocalDateTime.now())
         report.reportTo(reportMock)
 
         assertEquals(3, report.size())
