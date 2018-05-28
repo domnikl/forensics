@@ -16,7 +16,7 @@ class VcsReport: Reportable {
         return listOfChanges.count()
     }
 
-    override fun report(report: Report) {
+    override fun reportTo(report: Report.Builder) {
         val changesByFiles = listOfChanges
                 .groupingBy { it.filename }
                 .foldTo(mutableMapOf(), 0L) { sum, e -> sum + e.changes }

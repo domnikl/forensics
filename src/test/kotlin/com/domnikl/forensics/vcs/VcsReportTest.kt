@@ -11,11 +11,11 @@ internal class VcsReportTest {
     @Test
     fun canAddChangesFromFiles() {
         val vcsReport = VcsReport()
-        val reportMock = mock<Report>()
+        val reportMock = mock<Report.Builder>()
 
         vcsReport.addChanges("src/foobar.ruby", 20, "Peter Lustig")
         vcsReport.addChanges("src/foobar.ruby", 80, "Dominik Liebler")
-        vcsReport.report(reportMock)
+        vcsReport.reportTo(reportMock)
 
         val authors = mapOf("Dominik Liebler" to Pair(80L, 80.0), "Peter Lustig" to Pair(20L, 20.0))
 

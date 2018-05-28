@@ -14,14 +14,14 @@ class Analyzer(private val path: File) {
         val cloc = ShellCommand(File("cloc"))
         val vcsConfig = listOf(Git(ShellCommand(File("git"))))
 
-        val report = Report()
+        val reportBuilder = Report.Builder()
         val vcsReport = VcsFactory(vcsConfig).build(path).createReport(path)
         val locReport = LocFactory().build(LocFactory.TOOL_CLOC, cloc).createReport(path)
 
-        locReport.report(report)
-        vcsReport.report(report)
+        locReport.reportTo(reportBuilder)
+        vcsReport.reportTo(reportBuilder)
 
-        return report
+        return reportBuilder.build()
     }
 }
 

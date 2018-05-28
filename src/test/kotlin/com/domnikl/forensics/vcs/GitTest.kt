@@ -32,14 +32,14 @@ internal class GitTest {
 
     @Test
     fun canParseGitLogOutput() {
-        val reportMock = mock<Report>()
+        val reportMock = mock<Report.Builder>()
 
         val reader = BufferedReader(InputStreamReader(javaClass.getResourceAsStream("/git_fixture.log")))
         val mockGit = mock<ShellCommand>()
         whenever(mockGit.execute(any(), any())).thenReturn(reader)
 
         val report = Git(mockGit).createReport(File(""))
-        report.report(reportMock)
+        report.reportTo(reportMock)
 
         assertEquals(3, report.size())
 
