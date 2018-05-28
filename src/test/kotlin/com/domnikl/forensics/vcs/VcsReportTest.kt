@@ -19,8 +19,7 @@ internal class VcsReportTest {
 
         assertEquals(2, vcsReport.size())
 
-        verify(reportMock).addAuthor("Dominik Liebler", 80)
-        verify(reportMock).addAuthor("Peter Lustig", 20)
-        verify(reportMock).addChangeFreqs("src/foobar.ruby", 100)
+        verify(reportMock).addChange("Peter Lustig", "src/foobar.ruby", 20)
+        verify(reportMock).addChange("Dominik Liebler", "src/foobar.ruby", 80)
     }
 }
