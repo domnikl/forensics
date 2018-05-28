@@ -26,7 +26,8 @@ internal class GitTest {
     fun detectReturnsFalseWhenShellCommandThrowsIOException() {
         val path = File("").absoluteFile
         val mockGit = mock<ShellCommand>()
-        whenever(mockGit.execute(any(), any())).thenThrow(IOException("fatal: not a git repository (or any of the parent directories): .git"))
+        whenever(mockGit.executeWithTimeout(any(), any(), any(), any()))
+                .thenThrow(IOException("fatal: not a git repository (or any of the parent directories): .git"))
 
         assert(!Git(mockGit).detect(path))
     }
