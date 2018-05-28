@@ -17,10 +17,10 @@ internal class VcsReportTest {
         vcsReport.addChanges("src/foobar.ruby", 80, "Dominik Liebler")
         vcsReport.reportTo(reportMock)
 
-        val authors = mapOf("Dominik Liebler" to Pair(80L, 80.0), "Peter Lustig" to Pair(20L, 20.0))
-
         assertEquals(2, vcsReport.size())
-        verify(reportMock).addAuthors(authors)
-        verify(reportMock).addChangeFreqs("src/foobar.ruby", 100L)
+
+        verify(reportMock).addAuthor("Dominik Liebler", 80)
+        verify(reportMock).addAuthor("Peter Lustig", 20)
+        verify(reportMock).addChangeFreqs("src/foobar.ruby", 100)
     }
 }

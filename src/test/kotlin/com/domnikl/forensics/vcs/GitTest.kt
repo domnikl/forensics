@@ -43,7 +43,8 @@ internal class GitTest {
 
         assertEquals(3, report.size())
 
-        verify(reportMock).addAuthors(mapOf("Dominik Liebler" to Pair(80L, 80.0), "Kinimod Relbeil" to Pair(20L, 20.0)))
+        verify(reportMock).addAuthor("Dominik Liebler", 80L)
+        verify(reportMock).addAuthor("Kinimod Relbeil", 20L)
         verify(reportMock).addChangeFreqs("src/main/kotlin/com/domnikl/forensics/vcs/Git.kt", 80)
         verify(reportMock).addChangeFreqs("src/main/kotlin/com/domnikl/forensics/Analyzer.kt", 18)
         verify(reportMock).addChangeFreqs("src/main/kotlin/com/domnikl/forensics/complexity/Scanner.kt", 2)

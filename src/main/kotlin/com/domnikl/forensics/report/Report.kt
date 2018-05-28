@@ -45,7 +45,7 @@ open class Report(
 
     open class Builder {
         private var map = mutableMapOf<String, File>()
-        private var authors = mapOf<String, Pair<Long, Double>>()
+        private var authors = mutableMapOf<String, Long>()
 
         open fun addLoc(file: String, loc: Long) {
             ensureFileWasInitialized(file).loc = loc
@@ -59,11 +59,17 @@ open class Report(
             ensureFileWasInitialized(file).changes = changes
         }
 
-        open fun addAuthors(authors: Map<String, Pair<Long, Double>>) {
-            this.authors = authors
+        open fun addAuthor(name: String, changes: Long) {
+            if (this.authors.containsKey(name)) {
+                this.authors[name]!!.plus(changes)
+            } else {
+                this.authors[name] = changes
+            }
         }
 
         fun build(): Report {
+            val authors = this.authors.toList()
+
             val files = map
                     .toList()
                     .map { it.second }
@@ -71,10 +77,9 @@ open class Report(
                     .sortedByDescending { it.loc }
                     .sortedByDescending { it.changes }
 
-            val totalLoc = files.fold(0L) { sum, element -> sum + element.loc }
+            val totalLoc = files.fold(0L) { sum, e -> sum + e.loc }
 
             val locPerLanguage = files
-                    .filter { it.loc > 0 }
                     .groupingBy { it.language }
                     .foldTo(mutableMapOf(), 0L) { sum, element -> sum + element.loc }
                     .mapValues { Pair(it.value, it.value * 100.0 / totalLoc) }
@@ -82,12 +87,13 @@ open class Report(
                     .sortedByDescending { it.second.first }
                     .map { Language(name = it.first, totalLoc = it.second.first, percentLoc = it.second.second) }
 
-            val authors = this.authors
+            val totalChanges = authors.sumBy { it.second.toInt() }
+            val a = authors
                     .toList()
-                    .sortedByDescending { it.second.first }
-                    .map { Author(name = it.first, totalChanges = it.second.first, percentChanges = it.second.second) }
+                    .sortedByDescending { it.second }
+                    .map { Author(name = it.first, totalChanges = it.second, percentChanges = it.second * 100.0 / totalChanges) }
 
-            return Report(totalLoc, authors, locPerLanguage, files)
+            return Report(totalLoc, a, locPerLanguage, files)
         }
 
         private fun ensureFileWasInitialized(file: String): File {

@@ -17,20 +17,16 @@ class VcsReport: Reportable {
     }
 
     override fun reportTo(report: Report.Builder) {
-        val changesByFiles = listOfChanges
+        listOfChanges
                 .groupingBy { it.filename }
                 .foldTo(mutableMapOf(), 0L) { sum, e -> sum + e.changes }
+                .forEach { report.addChangeFreqs(it.key, it.value) }
 
-        for ((file, p) in changesByFiles) {
-            report.addChangeFreqs(file, p)
-        }
-
-        val authors = listOfChanges
+        listOfChanges
                 .groupingBy { it.author }
                 .foldTo(mutableMapOf(), 0L) { sum, e -> sum + e.changes }
                 .mapValues { Pair(it.value, it.value * 100.0 / totalChanges) }
-
-        report.addAuthors(authors)
+                .forEach { report.addAuthor(it.key, it.value.first) }
     }
 
     private data class Change(val filename: String, val changes: Long, val author: String)
