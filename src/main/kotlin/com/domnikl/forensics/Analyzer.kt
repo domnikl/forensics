@@ -7,29 +7,32 @@ import com.domnikl.forensics.vcs.Git
 import java.io.BufferedWriter
 import java.io.File
 import java.io.OutputStreamWriter
+import java.time.LocalDateTime
 import com.domnikl.forensics.loc.Factory as LocFactory
 import com.domnikl.forensics.vcs.Factory as VcsFactory
 
 class Analyzer(private val path: File) {
-    fun analyze(): Report {
+    fun analyze(after: LocalDateTime): Report {
         val cloc = ShellCommand(File("cloc"))
         val vcsConfig = listOf(Git(ShellCommand(File("git"))))
 
         val complexity = Scanner().scan(path)
 
-        val report = Report()
-        val vcsReport = VcsFactory(vcsConfig).build(path).createReport(path)
+        val reportBuilder = Report.Builder()
+        val vcsReport = VcsFactory(vcsConfig).build(path).createReport(path, after)
         val locReport = LocFactory().build(LocFactory.TOOL_CLOC, cloc).createReport(path)
 
-        locReport.report(report)
-        vcsReport.report(report)
+        locReport.reportTo(reportBuilder)
+        vcsReport.reportTo(reportBuilder)
 
-        return report
+        return reportBuilder.build()
     }
 }
 
 fun main(args: Array<String>) {
-    val report = Analyzer(File("").absoluteFile).analyze()
+    // that should be long enough to include everything
+    val after = LocalDateTime.now().minusYears(20)
+    val report = Analyzer(File("").absoluteFile).analyze(after)
 
     report.write(BufferedWriter(OutputStreamWriter(System.out)))
 }

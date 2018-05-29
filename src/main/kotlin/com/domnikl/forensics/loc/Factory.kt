@@ -3,6 +3,7 @@ package com.domnikl.forensics.loc
 import com.domnikl.forensics.shell.ShellCommand
 import java.io.File
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 class Factory {
     companion object {
@@ -24,7 +25,7 @@ class Factory {
     private fun checkIfBinaryIsValid(binary: ShellCommand): Boolean
     {
         try {
-            binary.execute(listOf("--version"), File("").absoluteFile)
+            binary.executeWithTimeout(listOf("--version"), File("").absoluteFile, 10, TimeUnit.SECONDS)
         } catch (e: IOException) {
             return false
         }

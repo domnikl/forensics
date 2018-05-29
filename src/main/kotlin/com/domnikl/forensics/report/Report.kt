@@ -3,67 +3,108 @@ package com.domnikl.forensics.report
 import java.io.BufferedWriter
 import kotlin.math.roundToLong
 
-open class Report {
-    private var map = mutableMapOf<String, Item>()
-    private var authors = mapOf<String, Pair<Long, Double>>()
-
-    open fun addLoc(file: String, loc: Long) {
-        ensureItemWasInitialized(file)
-        map[file]!!.loc = loc
-    }
-
-    open fun addLanguage(file: String, language: String) {
-        ensureItemWasInitialized(file)
-        map[file]!!.language = language
-    }
-
-    fun addChangeFreqs(file: String, changes: Long) {
-        ensureItemWasInitialized(file)
-        map[file]!!.changes = changes
-    }
-
-    fun addAuthors(authors: Map<String, Pair<Long, Double>>) {
-        this.authors = authors
-    }
-
-    private fun ensureItemWasInitialized(file: String) {
-        if (!map.containsKey(file)) {
-            map[file] = Item(filename = file)
-        }
-    }
+open class Report(
+        private val totalLoc: Long,
+        private val authors: List<Author>,
+        private val languages: List<Language>,
+        private val files: List<File>) {
 
     fun write(writer: BufferedWriter) {
-        // TODO: most parts of this should be in a Builder class
+        val a = authors.joinToString(", ") {
+            "${it.name}: ${it.totalChanges} (${it.percentChanges.roundToLong()}%)"
+        }
 
-        val l = map.toList().map { it.second }
-                .filter { it.loc > 0 && it.changes > 0 && it.filename.substring(0, 1) != "." }
-                .sortedByDescending { it.loc }
-                .sortedByDescending { it.changes }
+        val l = languages.joinToString(", ") {
+            "${it.name}: ${it.totalLoc} (${it.percentLoc.roundToLong()}%)"
+        }
 
-        val totalLoc = l.fold(0L) { sum, element -> sum + element.loc }
-
-        val locPerLanguage = l
-                .filter { it.loc > 0 }
-                .groupingBy { it.language }
-                .foldTo(mutableMapOf(), 0L) { sum, element -> sum + element.loc }
-                .mapValues { Pair(it.value, it.value * 100.0 / totalLoc) }
-                .toList()
-                .sortedByDescending { it.second.first }
-                .joinToString(", ") { "${it.first} = ${it.second.first} (${it.second.second.roundToLong()}%)" }
-
-        val a = authors
-                .toList()
-                .sortedByDescending { it.second.first }
-                .joinToString(", ") { "${it.first} = ${it.second.first} (${it.second.second.roundToLong()}%)" }
-
-        writer.write("filename,language,changes,loc,(totalLoc = $totalLoc, languages = ($locPerLanguage), authors = ($a))\n")
+        writer.write("filename,language,changes,loc,(totalLoc = $totalLoc, languages = ($l), authors = ($a))\n")
         writer.flush()
 
-        for (item in l) {
+        for (item in files) {
             writer.write("${item.filename},${item.language},${item.changes},${item.loc}\n")
             writer.flush()
         }
     }
 
-    data class Item(val filename: String, var loc: Long = 0, var changes: Long = 0, var language: String = "")
+    data class Author(
+            val name: String,
+            var totalChanges: Long = 0,
+            var percentChanges: Double = 0.0)
+
+    data class Language(
+            val name: String,
+            val totalLoc: Long,
+            val percentLoc: Double)
+
+    data class File(
+            val filename: String,
+            var loc: Long = 0,
+            var changes: Long = 0,
+            var language: String = "")
+
+    open class Builder {
+        private var files = mutableMapOf<String, File>()
+        private var authors = mutableMapOf<String, Author>()
+
+        open fun addLoc(file: String, loc: Long) {
+            ensureFileWasInitialized(file).loc = loc
+        }
+
+        open fun addLanguage(file: String, language: String) {
+            ensureFileWasInitialized(file).language = language
+        }
+
+        open fun addChange(author: String, filename: String, changes: Long) {
+            ensureFileWasInitialized(filename).changes += changes
+            ensureAuthorWasInitialized(author).totalChanges += changes
+        }
+
+        fun build(): Report {
+            val authors = this.authors
+                    .toList()
+                    .map { it.second }
+                    .sortedByDescending { it.totalChanges }
+
+            val files = files
+                    .toList()
+                    .map { it.second }
+                    .filter { it.loc > 0 && it.changes > 0 && it.filename.substring(0, 1) != "." }
+                    .sortedByDescending { it.loc }
+                    .sortedByDescending { it.changes }
+
+            val totalLoc = files.fold(0L) { sum, e -> sum + e.loc }
+
+            val locPerLanguage = files
+                    .groupingBy { it.language }
+                    .foldTo(mutableMapOf(), 0L) { sum, element -> sum + element.loc }
+                    .mapValues { Pair(it.value, it.value * 100.0 / totalLoc) }
+                    .toList()
+                    .sortedByDescending { it.second.first }
+                    .map { Language(name = it.first, totalLoc = it.second.first, percentLoc = it.second.second) }
+
+            val totalChanges = authors.sumBy { it.totalChanges.toInt() }
+
+            // calculate percentage for each authors
+            authors.forEach { it.percentChanges = it.totalChanges * 100.0 / totalChanges}
+
+            return Report(totalLoc, authors, locPerLanguage, files)
+        }
+
+        private fun ensureFileWasInitialized(file: String): File {
+            if (!files.containsKey(file)) {
+                files[file] = File(filename = file)
+            }
+
+            return files[file]!!
+        }
+
+        private fun ensureAuthorWasInitialized(author: String): Author {
+            if (!authors.containsKey(author)) {
+                authors[author] = Author(name = author)
+            }
+
+            return authors[author]!!
+        }
+    }
 }

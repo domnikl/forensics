@@ -10,10 +10,10 @@ internal class LocReportTest {
     fun canBeAddedToReport() {
         val locReport = LocReport()
 
-        val reportMock = mock<Report>()
+        val reportMock = mock<Report.Builder>()
 
         locReport.addFile("src/foobar.rb", 42, "Ruby")
-        locReport.report(reportMock)
+        locReport.reportTo(reportMock)
 
         verify(reportMock).addLoc("src/foobar.rb", 42)
         verify(reportMock).addLanguage("src/foobar.rb", "Ruby")

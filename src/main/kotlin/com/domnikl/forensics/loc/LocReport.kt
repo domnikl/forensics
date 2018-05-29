@@ -14,7 +14,7 @@ class LocReport: Reportable {
         return mapLoc.size
     }
 
-    override fun report(report: Report) {
+    override fun reportTo(report: Report.Builder) {
         for ((file, item) in this.mapLoc) {
             report.addLoc(file, item.first)
             report.addLanguage(file, item.second)

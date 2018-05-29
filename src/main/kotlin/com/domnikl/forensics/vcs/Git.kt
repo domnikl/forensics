@@ -4,6 +4,11 @@ import com.domnikl.forensics.shell.ShellCommand
 import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter.ISO_LOCAL_DATE
+import java.time.format.DateTimeFormatter.ISO_LOCAL_TIME
+import java.time.format.DateTimeFormatterBuilder
+import java.util.concurrent.TimeUnit
 
 class Git(private val shellCommand: ShellCommand) : VCS {
     companion object {
@@ -15,7 +20,7 @@ class Git(private val shellCommand: ShellCommand) : VCS {
 
     override fun detect(path: File): Boolean {
         try {
-            shellCommand.execute(listOf("log", "-1"), path)
+            shellCommand.executeWithTimeout(listOf("log", "-1"), path, 10, TimeUnit.SECONDS)
         } catch (e: IOException) {
             return false
         }
@@ -23,9 +28,23 @@ class Git(private val shellCommand: ShellCommand) : VCS {
         return true
     }
 
-    override fun createReport(path: File): VcsReport {
+    override fun createReport(path: File, after: LocalDateTime): VcsReport {
+        val formatter = DateTimeFormatterBuilder()
+                .parseCaseInsensitive()
+                .append(ISO_LOCAL_DATE)
+                .appendLiteral(' ')
+                .append(ISO_LOCAL_TIME)
+                .toFormatter()
+
         val logReader = shellCommand.execute(
-                listOf("log", "--all", "--numstat", "--date=short", "--pretty=format:--%h--%ad--%aN", "--no-renames"),
+                listOf(
+                        "log",
+                        "--all",
+                        "--numstat",
+                        "--date=short",
+                        "--pretty=format:--%h--%ad--%aN",
+                        "--no-renames",
+                        "--after='${after.format(formatter)}'"),
                 path
         )
 
