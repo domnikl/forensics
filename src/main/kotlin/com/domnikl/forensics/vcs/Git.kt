@@ -1,7 +1,6 @@
 package com.domnikl.forensics.vcs
 
 import com.domnikl.forensics.shell.ShellCommand
-import org.mockito.verification.Timeout
 import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
