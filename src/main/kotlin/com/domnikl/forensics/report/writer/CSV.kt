@@ -16,7 +16,7 @@ class CSV(private val writer: BufferedWriter): Writer {
             "${it.name}: ${it.totalLoc} (${it.percentLoc.roundToLong()}%)"
         }
 
-        writer.write("filename,language,changes,complexity,loc,(totalLoc = ${report.totalLoc}, languages = ($l), authors = ($a))\n")
+        writer.write("filename,language,changes,complexity,loc,(total_loc = ${report.totalLoc}, languages = ($l), authors = ($a))\n")
         writer.flush()
 
         for (item in report.files) {
