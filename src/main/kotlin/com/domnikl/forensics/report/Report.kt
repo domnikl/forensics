@@ -1,31 +1,10 @@
 package com.domnikl.forensics.report
 
-import java.io.BufferedWriter
-import kotlin.math.roundToLong
-
 open class Report(
-        private val totalLoc: Long,
-        private val authors: List<Author>,
-        private val languages: List<Language>,
-        private val files: List<File>) {
-
-    fun write(writer: BufferedWriter) {
-        val a = authors.joinToString(", ") {
-            "${it.name}: ${it.totalChanges} (${it.percentChanges.roundToLong()}%)"
-        }
-
-        val l = languages.joinToString(", ") {
-            "${it.name}: ${it.totalLoc} (${it.percentLoc.roundToLong()}%)"
-        }
-
-        writer.write("filename,language,changes,loc,(totalLoc = $totalLoc, languages = ($l), authors = ($a))\n")
-        writer.flush()
-
-        for (item in files) {
-            writer.write("${item.filename},${item.language},${item.changes},${item.loc}\n")
-            writer.flush()
-        }
-    }
+        val totalLoc: Long,
+        val authors: List<Author>,
+        val languages: List<Language>,
+        val files: List<File>) {
 
     data class Author(
             val name: String,
@@ -41,6 +20,7 @@ open class Report(
             val filename: String,
             var loc: Long = 0,
             var changes: Long = 0,
+            var complexity: Long = 0,
             var language: String = "")
 
     open class Builder {
@@ -58,6 +38,10 @@ open class Report(
         open fun addChange(author: String, filename: String, changes: Long) {
             ensureFileWasInitialized(filename).changes += changes
             ensureAuthorWasInitialized(author).totalChanges += changes
+        }
+
+        open fun addComplexity(file: String, complexity: Long) {
+            ensureFileWasInitialized(file).complexity += complexity
         }
 
         fun build(): Report {

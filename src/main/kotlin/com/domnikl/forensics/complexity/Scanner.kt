@@ -4,11 +4,16 @@ import java.io.BufferedReader
 import java.io.File
 
 class Scanner {
-    fun scan(path: File): Map<String, Long> {
-        return scanForFiles(path)
-                .map { it.path to scanFile(it) }
+    fun scan(path: File): Report {
+        val report = Report()
+
+        scanForFiles(path)
+                .map { it.toRelativeString(path) to scanFile(it) }
                 .filter { it.second > 0 }
                 .toMap()
+                .forEach { file, complexity -> report.addFile(file, complexity) }
+
+        return report
     }
 
     private fun scanForFiles(path: File): List<File> {
